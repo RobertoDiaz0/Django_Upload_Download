@@ -1,0 +1,64 @@
+CREAR PROYECTO
+
+django admin starproject
+
+
+CREAR APP
+
+python manage.py startapp UploadExcel
+
+
+CONFIGURAR SETTINGS
+
+MEDIA_URL = ‘/media/’
+MEDIA_ROOT = os.path.join(BASE_DIR, ‘media’)
+
+
+CREAR MODEL
+
+class Upload(models.Model):
+ 
+    title = models.CharField(max_length = 80)
+    pdf = models.FileField
+ 
+    class Meta:
+        ordering = ['title']
+     
+    def __str__(self):
+        return f"{self.title}"
+
+
+CREAR FORM
+
+class UploadBookForm(forms.ModelForm):
+    class Meta:
+        model = EBooksModel
+        fields = ('title', 'pdf',)
+
+
+CREAR TEMPLATE
+
+<form type = 'post' enctype = "multipart/form-data">
+
+
+CREAR VIEW
+
+def BookUploadView(request):
+    if request.method == 'POST':
+        form = UploadBookForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('The file is saved')
+    else:
+        form = UploadBookForm()
+        context = {
+            'form':form,
+        }
+        return render(request, 'books_website/UploadBook.html', context)
+
+
+    CREAR UPLOAD TEMPLATE (HTML)
+
+    CREAR PATH EN URLS.PY
+
+    path('book/upload', BookUploadView, name ='BookUploadView')
